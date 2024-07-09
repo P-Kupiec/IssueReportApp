@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myflutterapp/service//goodday_service.dart';
-import 'package:myflutterapp/service//imgur_service.dart';
+import 'package:myflutterapp/service/goodday_service.dart';
+import 'package:myflutterapp/service/imgur_service.dart';
 import 'package:myflutterapp/constants/ui_values.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +19,8 @@ class _HomePageState extends State<HomePage> {
   final ImagePicker _picker = ImagePicker();
   final ImgurService _imgurService = ImgurService();
   final GoodDayService _goodDayService = GoodDayService();
+
+  final _fbKey = GlobalKey<FormBuilderState>();
 
   XFile? _image;
 
@@ -37,7 +41,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             const SizedBox(height: 35),
             Image.asset(
-              UiValues().logoPath,
+              UiValues.logoPath,
               width: 150,
               height: 100,
             ),
@@ -45,46 +49,104 @@ class _HomePageState extends State<HomePage> {
             Container(
               alignment: Alignment.center,
               child: Text(
-                UiValues().headerText,
+                UiValues.headerText,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
             const SizedBox(height: 35),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Jaka niezgodnośc nastąpiła?',
-              ),
-            ),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Numer Projektu',
-              ),
-            ),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'ID Produktu / Numer Rysunku',
-              ),
-            ),
-            const SizedBox(
-              width: 250,
-              height: 150,
-              child: TextField(
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                minLines: 4,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Opisz problem',
-                ),
-              ),
-            ),
-            const TextField(
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
-                hintText: 'Imię i Nazwisko',
+            FormBuilder(
+              key: _fbKey,
+              child: Column(
+                children: <Widget>[
+                  FormBuilderTextField(
+                    name: UiValues.summaryField,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: UiValues.summaryHint,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        // _ageHasError =
+                      });
+                    },
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                    ]),
+                    textInputAction: TextInputAction.next,
+                  ),
+                  FormBuilderTextField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    name: UiValues.projectNrField,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: UiValues.projectNrHint,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        // _ageHasError =
+                      });
+                    },
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                    ]),
+                    textInputAction: TextInputAction.next,
+                  ),
+                  FormBuilderTextField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    name: UiValues.productIdField,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: UiValues.productIdHint,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        // _ageHasError =
+                      });
+                    },
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                    ]),
+                    textInputAction: TextInputAction.next,
+                  ),
+                  FormBuilderTextField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    name: UiValues.descriptionField,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    minLines: 4,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: UiValues.descriptionHint,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        // _ageHasError =
+                      });
+                    },
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                    ]),
+                    textInputAction: TextInputAction.next,
+                  ),
+                  FormBuilderTextField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    name: UiValues.employeeNameField,
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      hintText: UiValues.employeeNameHint,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        // _ageHasError =
+                      });
+                    },
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                    ]),
+                    textInputAction: TextInputAction.next,
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 50),
