@@ -1,7 +1,7 @@
 class GoodDayValues {
-  final String post = "POST";
-  final String put = "PUT";
-  final String url = "gooddayurl";
-  final String token = "sampleToken";
-  final String jsonType = "application/json";
+  static const String post = "POST";
+  static const String put = "PUT";
+  static const String url = "gooddayurl";
+  static const String token = "sampleToken";
+  static const String jsonType = "application/json";
 }

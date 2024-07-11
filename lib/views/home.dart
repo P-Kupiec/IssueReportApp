@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   final ImgurService _imgurService = ImgurService();
   final GoodDayService _goodDayService = GoodDayService();
 
-  final _fbKey = GlobalKey<FormBuilderState>();
+  final _formKey = GlobalKey<FormBuilderState>();
 
   XFile? _image;
 
@@ -55,102 +55,111 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 35),
             FormBuilder(
-              key: _fbKey,
-              child: Column(
+              key: _formKey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  FormBuilderTextField(
-                    name: UiValues.summaryField,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: UiValues.summaryHint,
+                  SizedBox(
+                    width: 600,
+                    child: Column(
+                      children: <Widget>[
+                        FormBuilderTextField(
+                          name: UiValues.summaryField,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: UiValues.summaryHint,
+                          ),
+                          onChanged: (val) {
+                            setState(() {
+                              // _ageHasError =
+                            });
+                          },
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                          ]),
+                          textInputAction: TextInputAction.next,
+                        ),
+                        FormBuilderTextField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          name: UiValues.projectNrField,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: UiValues.projectNrHint,
+                          ),
+                          onChanged: (val) {
+                            setState(() {
+                              // _ageHasError =
+                            });
+                          },
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                          ]),
+                          textInputAction: TextInputAction.next,
+                        ),
+                        FormBuilderTextField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          name: UiValues.productIdField,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: UiValues.productIdHint,
+                          ),
+                          onChanged: (val) {
+                            setState(() {
+                              // _ageHasError =
+                            });
+                          },
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                          ]),
+                          textInputAction: TextInputAction.next,
+                        ),
+                        FormBuilderTextField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          name: UiValues.descriptionField,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          minLines: 4,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: UiValues.descriptionHint,
+                          ),
+                          onChanged: (val) {
+                            setState(() {
+                              // _ageHasError =
+                            });
+                          },
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                          ]),
+                          textInputAction: TextInputAction.next,
+                        ),
+                        FormBuilderTextField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          name: UiValues.employeeNameField,
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: UiValues.employeeNameHint,
+                          ),
+                          onChanged: (val) {
+                            setState(() {
+                              // _ageHasError =
+                            });
+                          },
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                          ]),
+                          textInputAction: TextInputAction.next,
+                        ),
+                      ],
                     ),
-                    onChanged: (val) {
-                      setState(() {
-                        // _ageHasError =
-                      });
-                    },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                    ]),
-                    textInputAction: TextInputAction.next,
-                  ),
-                  FormBuilderTextField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    name: UiValues.projectNrField,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: UiValues.projectNrHint,
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        // _ageHasError =
-                      });
-                    },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                    ]),
-                    textInputAction: TextInputAction.next,
-                  ),
-                  FormBuilderTextField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    name: UiValues.productIdField,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: UiValues.productIdHint,
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        // _ageHasError =
-                      });
-                    },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                    ]),
-                    textInputAction: TextInputAction.next,
-                  ),
-                  FormBuilderTextField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    name: UiValues.descriptionField,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    minLines: 4,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: UiValues.descriptionHint,
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        // _ageHasError =
-                      });
-                    },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                    ]),
-                    textInputAction: TextInputAction.next,
-                  ),
-                  FormBuilderTextField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    name: UiValues.employeeNameField,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      hintText: UiValues.employeeNameHint,
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        // _ageHasError =
-                      });
-                    },
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                    ]),
-                    textInputAction: TextInputAction.next,
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 50),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
               Column(children: <Widget>[
                 SizedBox(
                   width: 200,
@@ -166,16 +175,23 @@ class _HomePageState extends State<HomePage> {
                   child: ElevatedButton(
                     style: buttonStyle,
                     onPressed: () {
-                      // _goodDayService.createTask(data);
+                      // if (_formKey.currentState!.validate()) {
+                      //   print(_formKey.currentState?.value);
+                      // }
+                      // _goodDayService.createTask(_formKey.currentState!.fields);
+                      _formKey.currentState?.save();
+
                       Fluttertoast.showToast(
-                          msg: "Karta zgłoszona",
+                          msg: _formKey.currentState
+                              ?.fields[UiValues.summaryField]?.value ?? "Null",
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.BOTTOM,
                           timeInSecForIosWeb: 1,
                           backgroundColor: Colors.grey,
                           textColor: Colors.white,
-                          fontSize: 16.0
-                      );
+                          fontSize: 16.0);
+
+                      _formKey.currentState?.reset();
                     },
                     child: const Text('Zgłoś Kartę'),
                   ),
@@ -221,8 +237,7 @@ class _HomePageState extends State<HomePage> {
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.grey,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
+          fontSize: 16.0);
 
       // _imgurService.uploadImage(File(image!.path));
 
