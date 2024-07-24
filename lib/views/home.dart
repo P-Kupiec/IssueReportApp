@@ -70,11 +70,6 @@ class _HomePageState extends State<HomePage> {
                             border: OutlineInputBorder(),
                             hintText: UiValues.summaryHint,
                           ),
-                          onChanged: (val) {
-                            setState(() {
-                              // _ageHasError =
-                            });
-                          },
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(),
                           ]),
@@ -87,11 +82,6 @@ class _HomePageState extends State<HomePage> {
                             border: OutlineInputBorder(),
                             hintText: UiValues.projectNrHint,
                           ),
-                          onChanged: (val) {
-                            setState(() {
-                              // _ageHasError =
-                            });
-                          },
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(),
                           ]),
@@ -104,11 +94,6 @@ class _HomePageState extends State<HomePage> {
                             border: OutlineInputBorder(),
                             hintText: UiValues.productIdHint,
                           ),
-                          onChanged: (val) {
-                            setState(() {
-                              // _ageHasError =
-                            });
-                          },
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(),
                           ]),
@@ -124,11 +109,6 @@ class _HomePageState extends State<HomePage> {
                             border: OutlineInputBorder(),
                             hintText: UiValues.descriptionHint,
                           ),
-                          onChanged: (val) {
-                            setState(() {
-                              // _ageHasError =
-                            });
-                          },
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(),
                           ]),
@@ -141,11 +121,11 @@ class _HomePageState extends State<HomePage> {
                             border: UnderlineInputBorder(),
                             hintText: UiValues.employeeNameHint,
                           ),
-                          onChanged: (val) {
-                            setState(() {
-                              // _ageHasError =
-                            });
-                          },
+                          // onChanged: (val) {
+                          //   setState(() {
+                          //     // _ageHasError =
+                          //   });
+                          // },
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(),
                           ]),
@@ -178,20 +158,22 @@ class _HomePageState extends State<HomePage> {
                       // if (_formKey.currentState!.validate()) {
                       //   print(_formKey.currentState?.value);
                       // }
-                      // _goodDayService.createTask(_formKey.currentState!.fields);
+
                       _formKey.currentState?.save();
 
-                      Fluttertoast.showToast(
-                          msg: _formKey.currentState
-                              ?.fields[UiValues.summaryField]?.value ?? "Null",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.grey,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
+                      _goodDayService.createTask(_formKey.currentState!.fields);
 
-                      _formKey.currentState?.reset();
+                      // Fluttertoast.showToast(
+                      //     msg: _formKey.currentState
+                      //         ?.fields[UiValues.summaryField]?.value ?? "Null",
+                      //     toastLength: Toast.LENGTH_SHORT,
+                      //     gravity: ToastGravity.BOTTOM,
+                      //     timeInSecForIosWeb: 1,
+                      //     backgroundColor: Colors.grey,
+                      //     textColor: Colors.white,
+                      //     fontSize: 16.0);
+
+                      // _formKey.currentState?.reset();
                     },
                     child: const Text('Zgłoś Kartę'),
                   ),
@@ -209,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                 ? Container(
                     alignment: Alignment.center,
                     child: const Text(
-                      'Brak Zdjęcia:',
+                      'Brak Zdjęcia.',
                     ))
                 : Image.file(
                     File(_image!.path),

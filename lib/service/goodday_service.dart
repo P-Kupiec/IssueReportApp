@@ -1,46 +1,49 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http_status/http_status.dart';
 import 'package:myflutterapp/constants/goodday_values.dart';
+import 'package:myflutterapp/constants/ui_values.dart';
+import 'package:myflutterapp/service/data_classes/goodday_data.dart';
 
 class GoodDayService {
-  Future<String> createTask(Map data) async {
-    Map<String, String> headers = {
-      'Content-type': GoodDayValues.jsonType,
-      'Accept': GoodDayValues.token,
-      'gd-api-token': GoodDayValues.token
-    };
+  Map<String, String> headers = {
+    'Content-type': GoodDayValues.jsonType,
+    'gd-api-token': GoodDayValues.token
+  };
+
+  Future<bool> createTask(Map formData) async {
+    final body = TaskData(formData);
 
     final response = await http.post(
-        Uri.parse('https://jsonplaceholder.typicode.com/albums'),
+        Uri.parse("${GoodDayValues.url}/tasks"),
         headers: headers,
-        body: jsonEncode(data));
+        body: jsonEncode(body));
 
-    if (response.statusCode == 201) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
-      return jsonDecode(response
-          .body); //jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
-      throw Exception('Failed to create task.');
+    if (!response.statusCode.isSuccessfulHttpStatusCode) {
+      throw Exception('Failed to create task');
     }
+
+    updateCustomFields(TaskResponse(jsonDecode(response.body)), formData);
+
+    return true;
   }
 
-  // createTask(Map<String,String> data) async {
-  //
-  //   Map<String,String> headers = {
-  //     'Content-type' : GoodDayValues().token,
-  //     'Accept': GoodDayValues().token,
-  //     'gd-api-token': GoodDayValues().token
-  //   };
-  //
-  //   final String jsonData = json.encode(data);
-  //   http.Client().post(Uri.parse(GoodDayValues().url),
-  //       body: jsonData, headers: headers);
-  //
-  //   if (kDebugMode) {
-  //     print(data);
-  //   }
-  // }
+  Future<bool> updateCustomFields(TaskResponse taskResponse, Map formData) async {
+    List<CustomField> body = [
+        CustomField("l8dmpO", formData[UiValues.projectNrField]?.value),
+        CustomField("MBYlLP", formData[UiValues.productIdField]?.value),
+        CustomField("5Mk38y", formData[UiValues.employeeNameField]?.value)
+    ];
+
+    final response = await http.put(
+        Uri.parse("${GoodDayValues.url}/task/${taskResponse.id}/custom-fields"),
+        headers: headers,
+        body: jsonEncode(body));
+
+    if (!response.statusCode.isSuccessfulHttpStatusCode) {
+      throw Exception('Failed to update task');
+    }
+
+    return true;
+  }
 }
