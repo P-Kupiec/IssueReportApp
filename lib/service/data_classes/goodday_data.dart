@@ -34,10 +34,16 @@ class TaskResponse {
 
 }
 
-class CustomFieldsData {
+class CustomFieldsRequest {
   late List<CustomField> customFields;
 
-  CustomFieldsData(this.customFields);
+  CustomFieldsRequest(this.customFields);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'customFields': customFields
+    };
+  }
 }
 
 class CustomField {

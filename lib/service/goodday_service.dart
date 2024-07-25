@@ -29,11 +29,11 @@ class GoodDayService {
   }
 
   Future<bool> updateCustomFields(TaskResponse taskResponse, Map formData) async {
-    List<CustomField> body = [
-        CustomField("l8dmpO", formData[UiValues.projectNrField]?.value),
-        CustomField("MBYlLP", formData[UiValues.productIdField]?.value),
-        CustomField("5Mk38y", formData[UiValues.employeeNameField]?.value)
-    ];
+    final body = CustomFieldsRequest([
+      CustomField("l8dmpO", formData[UiValues.projectNrField]?.value),
+      CustomField("MBYlLP", formData[UiValues.productIdField]?.value),
+      CustomField("5Mk38y", formData[UiValues.employeeNameField]?.value)
+    ]);
 
     final response = await http.put(
         Uri.parse("${GoodDayValues.url}/task/${taskResponse.id}/custom-fields"),
