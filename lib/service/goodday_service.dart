@@ -11,8 +11,9 @@ class GoodDayService {
     'gd-api-token': GoodDayValues.token
   };
 
-  Future<bool> createTask(Map formData) async {
-    final body = TaskData(formData);
+  Future<bool> createTask(Map formData, List<String> linkList) async {
+
+    final body = TaskData(formData, linkList);
 
     final response = await http.post(
         Uri.parse("${GoodDayValues.url}/tasks"),

@@ -4,13 +4,19 @@ class TaskData {
   String? projectId;
   String? title;
   String? fromUserId;
-  String? message;
+  late String message;
 
-  TaskData(Map data) {
+  TaskData(Map data, List linkList) {
     projectId = "SnVrYd";
     title = data[UiValues.summaryField]?.value;
     fromUserId = "USER1-ID";
-    message = data[UiValues.descriptionField]?.value;
+    message = data[UiValues.descriptionField]?.value ?? "";
+
+    message += '\nZdjęcia:\n';
+
+    for (final link in linkList) {
+      message += '\n $link';
+    }
   }
 
   Map<String, dynamic> toJson() {

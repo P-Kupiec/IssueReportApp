@@ -22,8 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   final _formKey = GlobalKey<FormBuilderState>();
 
-  XFile? _image;
-  List<File> _imagesList= [];
+  final List<File> _imagesList = [];
 
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
     textStyle: const TextStyle(fontSize: 18),
@@ -156,28 +155,26 @@ class _HomePageState extends State<HomePage> {
                   child: ElevatedButton(
                     style: buttonStyle,
                     onPressed: () {
-                      // if (_formKey.currentState!.validate()) {
-                      //   print(_formKey.currentState?.value);
-                      // }
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState?.save();
 
-                      _formKey.currentState?.save();
+                        final linkList = _imgurService.uploadImages(_imagesList);
+                        linkList.then((list) => _goodDayService.createTask(_formKey.currentState!.fields,
+                            list));
 
-                      _imgurService.uploadImages(_imagesList);
-                      //liste IDsow??
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "Uzupełnij brakujące pola",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.grey,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                      }
 
-                      //_goodDayService.createTask(_formKey.currentState!.fields);
-
-                      // Fluttertoast.showToast(
-                      //     msg: _formKey.currentState
-                      //         ?.fields[UiValues.summaryField]?.value ?? "Null",
-                      //     toastLength: Toast.LENGTH_SHORT,
-                      //     gravity: ToastGravity.BOTTOM,
-                      //     timeInSecForIosWeb: 1,
-                      //     backgroundColor: Colors.grey,
-                      //     textColor: Colors.white,
-                      //     fontSize: 16.0);
-
-                      // _formKey.currentState?.reset();
+                      _formKey.currentState?.reset();
+                      // _imagesList.clear();
                     },
                     child: const Text('Zgłoś Kartę'),
                   ),
@@ -191,14 +188,14 @@ class _HomePageState extends State<HomePage> {
                 'Zdjęcie niezgodności:',
               ),
             ),
-            _image == null
+            _imagesList.isEmpty
                 ? Container(
                     alignment: Alignment.center,
                     child: const Text(
                       'Brak Zdjęcia.',
                     ))
                 : Image.file(
-                    File(_image!.path),
+                    File(_imagesList.first.path),
                     width: 150,
                     height: 250,
                   ),

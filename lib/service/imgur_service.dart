@@ -6,7 +6,7 @@ import 'package:myflutterapp/constants/imgur_values.dart';
 
 class ImgurService {
 
-  uploadImages(List<File> images) async {
+  Future<List<String>> uploadImages(List<File> images) async {
 
     List<String> linksList = [];
 
@@ -29,46 +29,9 @@ class ImgurService {
         var data = result["data"];
         linksList.add(data["link"]);
       }
-    }  else {
-      return;
     }
 
-    print(linksList);
+    images.clear();
     return linksList;
   }
-
-  // Future uploadImage(File image) async {
-    // var request = http.MultipartRequest(ImgurValues.post, Uri.parse(ImgurValues.postUrl));
-    // request.headers["Authorization"] = ImgurValues.clientID;
-    // var file = await http.MultipartFile.fromPath(
-    //   "image",
-    //   image.path,
-    // );
-    // request.files.add(file);
-    // var streamedResponse  = await request.send();
-    // var response = await http.Response.fromStream(streamedResponse )
-    //     .then((value) => jsonDecode(value.body));
-    // if (response.statusCode != 200 ) {
-    //   return null;
-    // }
-    //
-    // main() async {
-    //   final client = imgur.Imgur(imgur.Authentication.fromToken('YOUR_IMGUR_ACCESS_TOKEN'));
-    //
-    //   /// Upload an image from path
-    //   await client.image
-    //       .uploadImage(
-    //       imagePath: '/path/of/the/image.png',
-    //       title: 'A title',
-    //       description: 'A description')
-    //       .then((image) => print('Uploaded image to: ${image.link}'));
-    // }
-    // }
-    //
-    // return jsonDecode(response.body);
-    // var data = response["data"];
-    // if (kDebugMode) {
-    //   print(data);
-    // }
-//  }
 }
