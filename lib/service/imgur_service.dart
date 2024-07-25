@@ -31,7 +31,6 @@ class ImgurService {
       }
     }
 
-    images.clear();
     return linksList;
   }
 }

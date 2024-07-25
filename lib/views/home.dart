@@ -138,8 +138,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 50),
-            Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               Column(children: <Widget>[
                 SizedBox(
                   width: 200,
@@ -154,13 +153,15 @@ class _HomePageState extends State<HomePage> {
                   width: 200,
                   child: ElevatedButton(
                     style: buttonStyle,
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState?.save();
 
-                        final linkList = _imgurService.uploadImages(_imagesList);
-                        linkList.then((list) => _goodDayService.createTask(_formKey.currentState!.fields,
-                            list));
+                        createTask().then((v) {
+                          _formKey.currentState?.reset();
+                          _imagesList.clear();
+                          setState(()=>{});
+                        });
 
                       } else {
                         Fluttertoast.showToast(
@@ -172,9 +173,6 @@ class _HomePageState extends State<HomePage> {
                             textColor: Colors.white,
                             fontSize: 16.0);
                       }
-
-                      _formKey.currentState?.reset();
-                      // _imagesList.clear();
                     },
                     child: const Text('Zgłoś Kartę'),
                   ),
@@ -185,7 +183,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               alignment: Alignment.center,
               child: const Text(
-                'Zdjęcie niezgodności:',
+                'Zdjęcia niezgodności:',
               ),
             ),
             _imagesList.isEmpty
@@ -194,11 +192,25 @@ class _HomePageState extends State<HomePage> {
                     child: const Text(
                       'Brak Zdjęcia.',
                     ))
-                : Image.file(
-                    File(_imagesList.first.path),
-                    width: 150,
-                    height: 250,
-                  ),
+                : SizedBox(
+                    height: 400,
+                    width: 400,
+                    child: ListView(
+                      padding: const EdgeInsets.all(15),
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        // SizedBox(width:20),
+                        for (final image in _imagesList) ...[
+                          Image.file(
+                            File(image.path),
+                            width: 250,
+                            height: 350,
+                          ),
+                          const SizedBox(width: 20)
+                        ]
+                      ],
+                    ),
+                  )
           ],
         ),
       ),
@@ -208,9 +220,8 @@ class _HomePageState extends State<HomePage> {
   Future getImage() async {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-      // File file = File(image!.path);
+
       setState(() {
-        //_image = image;
         _imagesList.add(File(image!.path));
       });
 
@@ -223,18 +234,17 @@ class _HomePageState extends State<HomePage> {
           textColor: Colors.white,
           fontSize: 16.0);
 
-      // _imgurService.uploadImage(File(image!.path));
-
-      // final pickedFile = await picker.getImage(source: ImageSource.camera);
-      // setState(() {
-      //   if (pickedFile != null) {
-      //     _image = File(pickedFile.path);
-      //   }
-      // });
     } catch (e) {
       setState(() {
-        //_imagesList = null;
       });
     }
+  }
+
+  Future createTask() async {
+    final linkList = await _imgurService.uploadImages(_imagesList);
+
+    final taskCreated = await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
+
+    return taskCreated;
   }
 }
