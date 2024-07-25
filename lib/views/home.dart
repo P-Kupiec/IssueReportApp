@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   XFile? _image;
+  List<File> _imagesList= [];
 
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
     textStyle: const TextStyle(fontSize: 18),
@@ -161,7 +162,10 @@ class _HomePageState extends State<HomePage> {
 
                       _formKey.currentState?.save();
 
-                      _goodDayService.createTask(_formKey.currentState!.fields);
+                      _imgurService.uploadImages(_imagesList);
+                      //liste IDsow??
+
+                      //_goodDayService.createTask(_formKey.currentState!.fields);
 
                       // Fluttertoast.showToast(
                       //     msg: _formKey.currentState
@@ -209,7 +213,8 @@ class _HomePageState extends State<HomePage> {
       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
       // File file = File(image!.path);
       setState(() {
-        _image = image;
+        //_image = image;
+        _imagesList.add(File(image!.path));
       });
 
       Fluttertoast.showToast(
@@ -231,7 +236,7 @@ class _HomePageState extends State<HomePage> {
       // });
     } catch (e) {
       setState(() {
-        _image = null;
+        //_imagesList = null;
       });
     }
   }
