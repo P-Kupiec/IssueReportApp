@@ -154,25 +154,7 @@ class _HomePageState extends State<HomePage> {
                   child: ElevatedButton(
                     style: buttonStyle,
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState?.save();
-
-                        createTask().then((v) {
-                          _formKey.currentState?.reset();
-                          _imagesList.clear();
-                          setState(()=>{});
-                        });
-
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "Uzupełnij brakujące pola",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.grey,
-                            textColor: Colors.white,
-                            fontSize: 16.0);
-                      }
+                      await createTask();
                     },
                     child: const Text('Zgłoś Kartę'),
                   ),
@@ -241,10 +223,27 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future createTask() async {
-    final linkList = await _imgurService.uploadImages(_imagesList);
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState?.save();
 
-    final taskCreated = await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
+      final linkList = await _imgurService.uploadImages(_imagesList);
 
-    return taskCreated;
+      await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
+
+      _formKey.currentState?.reset();
+
+      _imagesList.clear();
+
+      setState(()=>{});
+    } else {
+      Fluttertoast.showToast(
+          msg: "Uzupełnij brakujące pola",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 }
