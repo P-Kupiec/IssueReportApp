@@ -13,6 +13,12 @@ class UiValues {
   static const String summaryHint = 'Jaka niezgodnośc nastąpiła?';
   static const String projectNrHint = 'Numer Projektu';
   static const String productIdHint = 'ID Produktu / Numer Rysunku';
-  static const String descriptionHint = 'Opisz problem';
+  static const String descriptionHint = 'Opcjonalne: Szczeguły niezgodności';
   static const String employeeNameHint = 'Imię i Nazwisko';
+  static const String errorCode = 'Pole musi być wypełnione';
+
+  // Custom Colors
+  static const int wuwerBlue = 0xFF00366B;
+  static const int wuwerYellow = 0xFFFFD966;
+  static const int wuwerGrey = 0xFFBBBCBF;
 }

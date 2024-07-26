@@ -11,24 +11,26 @@ class GoodDayService {
     'gd-api-token': GoodDayValues.token
   };
 
+
   Future<bool> createTask(Map formData, List<String> linkList) async {
+  //Future createTask(Map formData, List<String> linkList) async {
+      final body = TaskData(formData, linkList);
 
-    final body = TaskData(formData, linkList);
+      final response = await http.post(
+          Uri.parse("${GoodDayValues.url}/tasks"),
+          headers: headers,
+          body: jsonEncode(body));
 
-    final response = await http.post(
-        Uri.parse("${GoodDayValues.url}/tasks"),
-        headers: headers,
-        body: jsonEncode(body));
+      if (!response.statusCode.isSuccessfulHttpStatusCode) {
+        throw Exception('Failed to create task');
+      }
 
-    if (!response.statusCode.isSuccessfulHttpStatusCode) {
-      throw Exception('Failed to create task');
+      updateCustomFields(TaskResponse(jsonDecode(response.body)), formData);
+
+      return true;
     }
 
-    updateCustomFields(TaskResponse(jsonDecode(response.body)), formData);
-
-    return true;
-  }
-
+  //Future updateCustomFields(TaskResponse taskResponse, Map formData) async {
   Future<bool> updateCustomFields(TaskResponse taskResponse, Map formData) async {
     final body = CustomFieldsRequest([
       CustomField("l8dmpO", formData[UiValues.projectNrField]?.value),
@@ -48,3 +50,4 @@ class GoodDayService {
     return true;
   }
 }
+

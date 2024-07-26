@@ -8,6 +8,8 @@ import 'package:myflutterapp/service/goodday_service.dart';
 import 'package:myflutterapp/service/imgur_service.dart';
 import 'package:myflutterapp/constants/ui_values.dart';
 
+
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -26,9 +28,10 @@ class _HomePageState extends State<HomePage> {
 
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
     textStyle: const TextStyle(fontSize: 18),
-    foregroundColor: Colors.black,
-    backgroundColor: Colors.blue,
-    shadowColor: Colors.lightBlueAccent,
+    foregroundColor: Colors.white,
+    // backgroundColor: Colors.blue,
+    backgroundColor: const Color(UiValues.wuwerBlue),
+    shadowColor: const Color(UiValues.wuwerYellow),
     elevation: 3,
   );
 
@@ -82,9 +85,9 @@ class _HomePageState extends State<HomePage> {
                             border: OutlineInputBorder(),
                             hintText: UiValues.projectNrHint,
                           ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                          ]),
+                          // validator: FormBuilderValidators.compose([
+                          //   FormBuilderValidators.required(),
+                          // ]),
                           textInputAction: TextInputAction.next,
                         ),
                         FormBuilderTextField(
@@ -94,9 +97,9 @@ class _HomePageState extends State<HomePage> {
                             border: OutlineInputBorder(),
                             hintText: UiValues.productIdHint,
                           ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                          ]),
+                          // validator: FormBuilderValidators.compose([
+                          //   FormBuilderValidators.required(),
+                          // ]),
                           textInputAction: TextInputAction.next,
                         ),
                         FormBuilderTextField(
@@ -109,16 +112,17 @@ class _HomePageState extends State<HomePage> {
                             border: OutlineInputBorder(),
                             hintText: UiValues.descriptionHint,
                           ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                          ]),
+                          // validator: FormBuilderValidators.compose([
+                          //   FormBuilderValidators.required(),
+                          // ]),
                           textInputAction: TextInputAction.next,
                         ),
                         FormBuilderTextField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           name: UiValues.employeeNameField,
                           decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
+                            //border: UnderlineInputBorder(),
+                            border: OutlineInputBorder(),
                             hintText: UiValues.employeeNameHint,
                           ),
                           // onChanged: (val) {
@@ -126,9 +130,9 @@ class _HomePageState extends State<HomePage> {
                           //     // _ageHasError =
                           //   });
                           // },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                          ]),
+                          // validator: FormBuilderValidators.compose([
+                          //   FormBuilderValidators.required(),
+                          // ]),
                           textInputAction: TextInputAction.next,
                         ),
                       ],
@@ -144,7 +148,9 @@ class _HomePageState extends State<HomePage> {
                   width: 200,
                   child: ElevatedButton.icon(
                     style: buttonStyle,
-                    onPressed: getImage,
+                    onPressed: () async {
+                      await getImage();
+                    },
                     icon: const Icon(Icons.add_a_photo, size: 22),
                     label: const Text('Dodaj Zdjęcie'),
                   ),
@@ -213,7 +219,7 @@ class _HomePageState extends State<HomePage> {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.grey,
-          textColor: Colors.white,
+          textColor: const Color(UiValues.wuwerBlue),
           fontSize: 16.0);
 
     } catch (e) {
@@ -230,6 +236,15 @@ class _HomePageState extends State<HomePage> {
 
       await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
 
+      Fluttertoast.showToast(
+          msg: "Karta wysłana.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.grey,
+          textColor: const Color(UiValues.wuwerBlue),
+          fontSize: 16.0);
+
       _formKey.currentState?.reset();
 
       _imagesList.clear();
@@ -242,7 +257,7 @@ class _HomePageState extends State<HomePage> {
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.grey,
-          textColor: Colors.white,
+          textColor: const Color(UiValues.wuwerBlue),
           fontSize: 16.0);
     }
   }
