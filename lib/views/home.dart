@@ -7,9 +7,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:myflutterapp/service/goodday_service.dart';
 import 'package:myflutterapp/service/imgur_service.dart';
 import 'package:myflutterapp/constants/ui_values.dart';
-
 import 'package:uiblock/uiblock.dart';
+import 'package:camera/camera.dart';
 
+import 'camera_page.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   final ImagePicker _picker = ImagePicker();
   final ImgurService _imgurService = ImgurService();
   final GoodDayService _goodDayService = GoodDayService();
@@ -28,43 +30,9 @@ class _HomePageState extends State<HomePage> {
 
   final List<File> _imagesList = [];
 
-  //// Test retrieve Data
-
-  @override
-  void initState() {
-    super.initState();
-    getLostData();
-  }
-
-  Future<void> getLostData() async {
-    final LostDataResponse response = await _picker.retrieveLostData();
-    if (response.isEmpty) {
-      return;
-    }
-    if (response.file != null) {
-      _handleFile(File(response.file!.path));
-    } else {
-      _handleError(response.exception);
-    }
-  }
-
-  void _handleFile(File file) {
-    setState(() {
-      _imagesList.add(file);
-    });
-  }
-
-  void _handleError(dynamic exception) {
-    print('Error: $exception');
-  }
-
-  //// End Test retrieve Data
-
-
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
     textStyle: const TextStyle(fontSize: 18),
     foregroundColor: Colors.white,
-    // backgroundColor: Colors.blue,
     backgroundColor: const Color(UiValues.wuwerBlue),
     shadowColor: const Color(UiValues.wuwerYellow),
     elevation: 3,
@@ -184,7 +152,8 @@ class _HomePageState extends State<HomePage> {
                   child: ElevatedButton.icon(
                     style: buttonStyle,
                     onPressed: () async {
-                      await getImage();
+                      await availableCameras().then((value) => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => CameraPage(cameras: value))));
                     },
                     icon: const Icon(Icons.add_a_photo, size: 22),
                     label: const Text('Dodaj Zdjęcie'),
@@ -222,7 +191,6 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(15),
                       scrollDirection: Axis.horizontal,
                       children: [
-                        // SizedBox(width:20),
                         for (final image in _imagesList) ...[
                           Image.file(
                             File(image.path),
@@ -272,7 +240,7 @@ class _HomePageState extends State<HomePage> {
       final linkList = await _imgurService.uploadImages(_imagesList);
       await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
 
-      UIBlock.unblock(context);
+
 
       Fluttertoast.showToast(
           msg: "Karta wysłana.",
@@ -287,7 +255,9 @@ class _HomePageState extends State<HomePage> {
 
       _imagesList.clear();
 
-      setState(()=>{});
+      setState((){
+        UIBlock.unblock(context);
+      });
     } else {
       Fluttertoast.showToast(
           msg: "Uzupełnij brakujące pola",
