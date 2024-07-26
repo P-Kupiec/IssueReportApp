@@ -8,6 +8,8 @@ import 'package:myflutterapp/service/goodday_service.dart';
 import 'package:myflutterapp/service/imgur_service.dart';
 import 'package:myflutterapp/constants/ui_values.dart';
 
+import 'package:uiblock/uiblock.dart';
+
 
 
 class HomePage extends StatefulWidget {
@@ -230,12 +232,14 @@ class _HomePageState extends State<HomePage> {
 
   Future createTask() async {
     if (_formKey.currentState!.validate()) {
+      UIBlock.block(context);
       _formKey.currentState?.save();
 
       final linkList = await _imgurService.uploadImages(_imagesList);
 
       await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
 
+      UIBlock.unblock(context);
       Fluttertoast.showToast(
           msg: "Karta wysłana.",
           toastLength: Toast.LENGTH_SHORT,
