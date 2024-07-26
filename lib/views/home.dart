@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    width: 600,
+                    width: 450,
                     child: Column(
                       children: <Widget>[
                         FormBuilderTextField(

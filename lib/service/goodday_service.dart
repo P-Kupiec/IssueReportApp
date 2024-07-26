@@ -25,7 +25,7 @@ class GoodDayService {
         throw Exception('Failed to create task');
       }
 
-      updateCustomFields(TaskResponse(jsonDecode(response.body)), formData);
+      await updateCustomFields(TaskResponse(jsonDecode(response.body)), formData);
 
       return true;
     }
@@ -33,9 +33,9 @@ class GoodDayService {
   //Future updateCustomFields(TaskResponse taskResponse, Map formData) async {
   Future<bool> updateCustomFields(TaskResponse taskResponse, Map formData) async {
     final body = CustomFieldsRequest([
-      CustomField("l8dmpO", formData[UiValues.projectNrField]?.value),
-      CustomField("MBYlLP", formData[UiValues.productIdField]?.value),
-      CustomField("5Mk38y", formData[UiValues.employeeNameField]?.value)
+      CustomField("l8dmpO", formData[UiValues.projectNrField]?.value ?? ""),
+      CustomField("MBYlLP", formData[UiValues.productIdField]?.value ?? ""),
+      CustomField("5Mk38y", formData[UiValues.employeeNameField]?.value ?? "")
     ]);
 
     final response = await http.put(
