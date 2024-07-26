@@ -13,7 +13,7 @@ class UiValues {
   static const String summaryHint = 'Jaka niezgodnośc nastąpiła?';
   static const String projectNrHint = 'Numer Projektu';
   static const String productIdHint = 'ID Produktu / Numer Rysunku';
-  static const String descriptionHint = 'Opcjonalne: Szczeguły niezgodności';
+  static const String descriptionHint = 'Opcjonalne: Szczegóły niezgodności';
   static const String employeeNameHint = 'Imię i Nazwisko';
   static const String errorCode = 'Pole musi być wypełnione';
 

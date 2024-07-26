@@ -28,6 +28,39 @@ class _HomePageState extends State<HomePage> {
 
   final List<File> _imagesList = [];
 
+  //// Test retrieve Data
+
+  @override
+  void initState() {
+    super.initState();
+    getLostData();
+  }
+
+  Future<void> getLostData() async {
+    final LostDataResponse response = await _picker.retrieveLostData();
+    if (response.isEmpty) {
+      return;
+    }
+    if (response.file != null) {
+      _handleFile(File(response.file!.path));
+    } else {
+      _handleError(response.exception);
+    }
+  }
+
+  void _handleFile(File file) {
+    setState(() {
+      _imagesList.add(file);
+    });
+  }
+
+  void _handleError(dynamic exception) {
+    print('Error: $exception');
+  }
+
+  //// End Test retrieve Data
+
+
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
     textStyle: const TextStyle(fontSize: 18),
     foregroundColor: Colors.white,
@@ -232,14 +265,15 @@ class _HomePageState extends State<HomePage> {
 
   Future createTask() async {
     if (_formKey.currentState!.validate()) {
+
       UIBlock.block(context);
+
       _formKey.currentState?.save();
-
       final linkList = await _imgurService.uploadImages(_imagesList);
-
       await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
 
       UIBlock.unblock(context);
+
       Fluttertoast.showToast(
           msg: "Karta wysłana.",
           toastLength: Toast.LENGTH_SHORT,
