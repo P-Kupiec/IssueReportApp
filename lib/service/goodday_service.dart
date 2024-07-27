@@ -20,12 +20,13 @@ class GoodDayService {
           headers: headers,
           body: jsonEncode(body));
 
+      final responseBody = jsonDecode(response.body);
       if (!response.statusCode.isSuccessfulHttpStatusCode) {
         dev.log("ERROR: Received Response Code: ${response.statusCode}");
-        throw Exception('Failed to create task. Response Code: ${response.statusCode}');
+        throw Exception('Failed to create task. Error Code: ${response.statusCode} Error Message: ${responseBody['message']}');
       }
 
-      await updateCustomFields(TaskResponse(jsonDecode(response.body)), formData);
+      await updateCustomFields(TaskResponse(responseBody), formData);
 
       return true;
     }
