@@ -15,7 +15,7 @@ class TaskData {
     message += '\nZdjęcia:\n';
 
     for (final link in linkList) {
-      message += '\n $link';
+      message += '$link\n';
     }
   }
 

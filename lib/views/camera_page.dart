@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key, required this.cameras});
 
-  final List<CameraDescription>? cameras;
+  final List<CameraDescription> cameras;
 
   @override
   State<CameraPage> createState() => _CameraPageState();
@@ -24,7 +24,7 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
-    initCamera(widget.cameras![0]);
+    initCamera(widget.cameras[0]);
   }
 
   Future takePicture() async {
@@ -37,15 +37,12 @@ class _CameraPageState extends State<CameraPage> {
     try {
       await _cameraController.setFlashMode(FlashMode.off);
       XFile picture = await _cameraController.takePicture();
-      print(picture.path);
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => PreviewPage(
-      //               picture: picture,
-      //             )));
+
+      if (!mounted) return;
+
+      Navigator.pop(context, picture);
     } on CameraException catch (e) {
-      debugPrint('Error occured while taking picture: $e');
+      debugPrint('Error occurred while taking picture: $e');
       return null;
     }
   }
@@ -59,7 +56,7 @@ class _CameraPageState extends State<CameraPage> {
         setState(() {});
       });
     } on CameraException catch (e) {
-      debugPrint("camera error $e");
+      debugPrint("Camera error $e");
     }
   }
 
@@ -97,7 +94,7 @@ class _CameraPageState extends State<CameraPage> {
                   onPressed: () {
                     setState(
                         () => _isRearCameraSelected = !_isRearCameraSelected);
-                    initCamera(widget.cameras![_isRearCameraSelected ? 0 : 1]);
+                    initCamera(widget.cameras[_isRearCameraSelected ? 0 : 1]);
                   },
                 )),
                 Expanded(

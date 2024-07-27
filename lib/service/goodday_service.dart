@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as dev;
 import 'package:http/http.dart' as http;
 import 'package:http_status/http_status.dart';
 import 'package:myflutterapp/constants/goodday_values.dart';
@@ -11,9 +12,7 @@ class GoodDayService {
     'gd-api-token': GoodDayValues.token
   };
 
-
-  Future<bool> createTask(Map formData, List<String> linkList) async {
-  //Future createTask(Map formData, List<String> linkList) async {
+  Future createTask(Map formData, List<String> linkList) async {
       final body = TaskData(formData, linkList);
 
       final response = await http.post(
@@ -22,7 +21,8 @@ class GoodDayService {
           body: jsonEncode(body));
 
       if (!response.statusCode.isSuccessfulHttpStatusCode) {
-        throw Exception('Failed to create task');
+        dev.log("ERROR: Received Response Code: ${response.statusCode}");
+        throw Exception('Failed to create task. Response Code: ${response.statusCode}');
       }
 
       await updateCustomFields(TaskResponse(jsonDecode(response.body)), formData);
@@ -30,8 +30,7 @@ class GoodDayService {
       return true;
     }
 
-  //Future updateCustomFields(TaskResponse taskResponse, Map formData) async {
-  Future<bool> updateCustomFields(TaskResponse taskResponse, Map formData) async {
+  Future updateCustomFields(TaskResponse taskResponse, Map formData) async {
     final body = CustomFieldsRequest([
       CustomField("l8dmpO", formData[UiValues.projectNrField]?.value ?? ""),
       CustomField("MBYlLP", formData[UiValues.productIdField]?.value ?? ""),
@@ -44,6 +43,7 @@ class GoodDayService {
         body: jsonEncode(body));
 
     if (!response.statusCode.isSuccessfulHttpStatusCode) {
+      dev.log("ERROR: Received Response Code: ${response.statusCode}");
       throw Exception('Failed to update task');
     }
 

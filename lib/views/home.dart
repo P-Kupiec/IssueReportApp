@@ -1,28 +1,28 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:myflutterapp/ui_elements/form.dart';
+import 'package:uiblock/uiblock.dart';
+import 'package:camera/camera.dart';
+import 'camera_page.dart';
+
 import 'package:myflutterapp/service/goodday_service.dart';
 import 'package:myflutterapp/service/imgur_service.dart';
 import 'package:myflutterapp/constants/ui_values.dart';
-import 'package:uiblock/uiblock.dart';
-import 'package:camera/camera.dart';
+import 'package:myflutterapp/ui_elements/toast.dart';
 
-import 'camera_page.dart';
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.cameras});
+
+  final List<CameraDescription> cameras;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
-  final ImagePicker _picker = ImagePicker();
   final ImgurService _imgurService = ImgurService();
   final GoodDayService _goodDayService = GoodDayService();
 
@@ -65,82 +65,7 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(
-                    width: 450,
-                    child: Column(
-                      children: <Widget>[
-                        FormBuilderTextField(
-                          name: UiValues.summaryField,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: UiValues.summaryHint,
-                          ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                          ]),
-                          textInputAction: TextInputAction.next,
-                        ),
-                        FormBuilderTextField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          name: UiValues.projectNrField,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: UiValues.projectNrHint,
-                          ),
-                          // validator: FormBuilderValidators.compose([
-                          //   FormBuilderValidators.required(),
-                          // ]),
-                          textInputAction: TextInputAction.next,
-                        ),
-                        FormBuilderTextField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          name: UiValues.productIdField,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: UiValues.productIdHint,
-                          ),
-                          // validator: FormBuilderValidators.compose([
-                          //   FormBuilderValidators.required(),
-                          // ]),
-                          textInputAction: TextInputAction.next,
-                        ),
-                        FormBuilderTextField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          name: UiValues.descriptionField,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          minLines: 4,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: UiValues.descriptionHint,
-                          ),
-                          // validator: FormBuilderValidators.compose([
-                          //   FormBuilderValidators.required(),
-                          // ]),
-                          textInputAction: TextInputAction.next,
-                        ),
-                        FormBuilderTextField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          name: UiValues.employeeNameField,
-                          decoration: const InputDecoration(
-                            //border: UnderlineInputBorder(),
-                            border: OutlineInputBorder(),
-                            hintText: UiValues.employeeNameHint,
-                          ),
-                          // onChanged: (val) {
-                          //   setState(() {
-                          //     // _ageHasError =
-                          //   });
-                          // },
-                          // validator: FormBuilderValidators.compose([
-                          //   FormBuilderValidators.required(),
-                          // ]),
-                          textInputAction: TextInputAction.next,
-                        ),
-                      ],
-                    ),
-                  ),
+                  buildForm()
                 ],
               ),
             ),
@@ -151,22 +76,22 @@ class _HomePageState extends State<HomePage> {
                   width: 200,
                   child: ElevatedButton.icon(
                     style: buttonStyle,
-                    onPressed: () async {
-                      await availableCameras().then((value) => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => CameraPage(cameras: value))));
+                    onPressed: () {
+                      takePicture(context, widget.cameras);
                     },
                     icon: const Icon(Icons.add_a_photo, size: 22),
-                    label: const Text('Dodaj Zdjęcie'),
+                    label: const Text('Dodaj Zdjęcia'),
                   ),
                 ),
                 SizedBox(
                   width: 200,
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     style: buttonStyle,
                     onPressed: () async {
                       await createTask();
                     },
-                    child: const Text('Zgłoś Kartę'),
+                    icon: const Icon(Icons.check_circle, size: 22),
+                    label: const Text('Zgłoś Kartę'),
                   ),
                 ),
               ]),
@@ -182,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                 ? Container(
                     alignment: Alignment.center,
                     child: const Text(
-                      'Brak Zdjęcia.',
+                      'Brak Zdjęcia',
                     ))
                 : SizedBox(
                     height: 400,
@@ -208,27 +133,26 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future getImage() async {
-    try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+  Future takePicture(BuildContext context, List<CameraDescription> cameras) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CameraPage(cameras: cameras)),
+    );
 
-      setState(() {
-        _imagesList.add(File(image!.path));
-      });
+    // When a BuildContext is used from a StatefulWidget, the mounted property
+    // must be checked after an asynchronous gap.
+    if (!context.mounted) return;
 
-      Fluttertoast.showToast(
-          msg: "Zdjęcie dodane",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.grey,
-          textColor: const Color(UiValues.wuwerBlue),
-          fontSize: 16.0);
+    final XFile? image = result;
 
-    } catch (e) {
-      setState(() {
-      });
-    }
+    setState(() {
+      _imagesList.add(File(image!.path));
+    });
+
+    showToast("Zdjęcie dodane");
   }
 
   Future createTask() async {
@@ -237,36 +161,27 @@ class _HomePageState extends State<HomePage> {
       UIBlock.block(context);
 
       _formKey.currentState?.save();
-      final linkList = await _imgurService.uploadImages(_imagesList);
-      await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
 
+      try {
+        final linkList = await _imgurService.uploadImages(_imagesList);
+        await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
+      } on Exception catch (e) {
+        showToast("$e");
+        return;
+      } finally {
+        if(mounted) {
+          UIBlock.unblock(context);
+        }
+      }
 
-
-      Fluttertoast.showToast(
-          msg: "Karta wysłana.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.grey,
-          textColor: const Color(UiValues.wuwerBlue),
-          fontSize: 16.0);
+      showToast("Karta wysłana");
 
       _formKey.currentState?.reset();
-
       _imagesList.clear();
 
-      setState((){
-        UIBlock.unblock(context);
-      });
+      setState((){});
     } else {
-      Fluttertoast.showToast(
-          msg: "Uzupełnij brakujące pola",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.grey,
-          textColor: const Color(UiValues.wuwerBlue),
-          fontSize: 16.0);
+      showToast("Uzupełnij brakujące pola");
     }
   }
 }
