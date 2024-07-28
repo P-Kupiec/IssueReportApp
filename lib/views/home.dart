@@ -4,14 +4,13 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:myflutterapp/ui_elements/form.dart';
 import 'package:uiblock/uiblock.dart';
 import 'package:camera/camera.dart';
-import 'camera_page.dart';
+import '../ui_elements/images_list.dart';
+import 'camera.dart';
 
 import 'package:myflutterapp/service/goodday_service.dart';
 import 'package:myflutterapp/service/imgur_service.dart';
 import 'package:myflutterapp/constants/ui_values.dart';
 import 'package:myflutterapp/ui_elements/toast.dart';
-
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.cameras});
@@ -19,10 +18,10 @@ class HomePage extends StatefulWidget {
   final List<CameraDescription> cameras;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   final ImgurService _imgurService = ImgurService();
   final GoodDayService _goodDayService = GoodDayService();
 
@@ -37,6 +36,10 @@ class _HomePageState extends State<HomePage> {
     shadowColor: const Color(UiValues.wuwerYellow),
     elevation: 3,
   );
+
+  updateHome() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +67,7 @@ class _HomePageState extends State<HomePage> {
               key: _formKey,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  buildForm()
-                ],
+                children: <Widget>[buildForm()],
               ),
             ),
             const SizedBox(height: 50),
@@ -109,31 +110,15 @@ class _HomePageState extends State<HomePage> {
                     child: const Text(
                       'Brak Zdjęcia',
                     ))
-                : SizedBox(
-                    height: 400,
-                    width: 400,
-                    child: ListView(
-                      padding: const EdgeInsets.all(15),
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        for (final image in _imagesList) ...[
-                          Image.file(
-                            File(image.path),
-                            width: 250,
-                            height: 350,
-                          ),
-                          const SizedBox(width: 20)
-                        ]
-                      ],
-                    ),
-                  )
+                : generateImages(_imagesList, this)
           ],
         ),
       ),
     );
   }
 
-  Future takePicture(BuildContext context, List<CameraDescription> cameras) async {
+  Future takePicture(
+      BuildContext context, List<CameraDescription> cameras) async {
     FocusManager.instance.primaryFocus?.unfocus();
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
@@ -157,19 +142,19 @@ class _HomePageState extends State<HomePage> {
 
   Future createTask() async {
     if (_formKey.currentState!.validate()) {
-
       UIBlock.block(context);
 
       _formKey.currentState?.save();
 
       try {
         final linkList = await _imgurService.uploadImages(_imagesList);
-        await _goodDayService.createTask(_formKey.currentState!.fields, linkList);
+        await _goodDayService.createTask(
+            _formKey.currentState!.fields, linkList);
       } on Exception catch (e) {
         showToast("$e");
         return;
       } finally {
-        if(mounted) {
+        if (mounted) {
           UIBlock.unblock(context);
         }
       }
@@ -179,7 +164,7 @@ class _HomePageState extends State<HomePage> {
       _formKey.currentState?.reset();
       _imagesList.clear();
 
-      setState((){});
+      setState(() {});
     } else {
       showToast("Uzupełnij brakujące pola");
     }
