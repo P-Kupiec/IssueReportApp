@@ -9,7 +9,7 @@ class TaskData {
   TaskData(Map data, List linkList) {
     projectId = "SnVrYd";
     title = data[UiValues.summaryField]?.value;
-    fromUserId = "USER1-ID";
+    fromUserId = ""; //Marcel Wuwer: SPvGQx
     message = data[UiValues.descriptionField]?.value ?? "";
 
     message += '\nZdjęcia:\n';
@@ -37,7 +37,6 @@ class TaskResponse {
     id = response['id'];
     shortId = response['shortId'];
   }
-
 }
 
 class CustomFieldsRequest {
