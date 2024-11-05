@@ -10,6 +10,7 @@ buildForm() {
     child: Column(
       children: <Widget>[
         FormBuilderTextField(
+          enableSuggestions: true,
           name: UiValues.summaryField,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: const InputDecoration(
@@ -22,6 +23,7 @@ buildForm() {
           textInputAction: TextInputAction.next,
         ),
         FormBuilderTextField(
+          enableSuggestions: true,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           name: UiValues.projectNrField,
           decoration: const InputDecoration(
@@ -34,6 +36,7 @@ buildForm() {
           textInputAction: TextInputAction.next,
         ),
         FormBuilderTextField(
+          enableSuggestions: true,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           name: UiValues.productIdField,
           decoration: const InputDecoration(
@@ -46,6 +49,7 @@ buildForm() {
           textInputAction: TextInputAction.next,
         ),
         FormBuilderTextField(
+          enableSuggestions: true,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           name: UiValues.descriptionField,
           keyboardType: TextInputType.multiline,
@@ -61,6 +65,7 @@ buildForm() {
           textInputAction: TextInputAction.next,
         ),
         FormBuilderTextField(
+          enableSuggestions: true,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           name: UiValues.employeeNameField,
           decoration: const InputDecoration(

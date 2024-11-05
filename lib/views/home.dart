@@ -108,7 +108,7 @@ class HomePageState extends State<HomePage> {
                 ? Container(
                     alignment: Alignment.center,
                     child: const Text(
-                      'Brak Zdjęcia',
+                      'Brak Zdjęć',
                     ))
                 : generateImages(_imagesList, this)
           ],
